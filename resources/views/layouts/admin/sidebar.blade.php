@@ -32,7 +32,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('admin.supplier') }}">
+            <a href="{{ route('admin.suppliers') }}">
                 <i class="fas fa-truck"></i>
                 <span class="menu-text">Suppliers</span>
             </a>

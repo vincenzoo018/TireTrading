@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.customer.app')
 
 @section('content')
 <!-- Services Header -->
@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4 mb-4">
                 <div class="card service-card text-center">
                     <div class="card-body">
@@ -40,7 +40,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4 mb-4">
                 <div class="card service-card text-center">
                     <div class="card-body">
@@ -54,7 +54,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4 mb-4">
                 <div class="card service-card text-center">
                     <div class="card-body">
@@ -68,7 +68,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4 mb-4">
                 <div class="card service-card text-center">
                     <div class="card-body">
@@ -82,7 +82,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4 mb-4">
                 <div class="card service-card text-center">
                     <div class="card-body">

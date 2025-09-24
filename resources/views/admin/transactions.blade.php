@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin.app')
 
 @section('content')
 <div class="page-header">
@@ -22,7 +22,7 @@
             <p class="stat-label">Total Transactions</p>
         </div>
     </div>
-    
+
     <div class="stat-card">
         <div class="stat-icon" style="background-color: rgba(40, 167, 69, 0.1); color: var(--success);">
             <i class="fas fa-check-circle"></i>
@@ -32,7 +32,7 @@
             <p class="stat-label">Total Amount</p>
         </div>
     </div>
-    
+
     <div class="stat-card">
         <div class="stat-icon" style="background-color: rgba(255, 193, 7, 0.1); color: var(--warning);">
             <i class="fas fa-clock"></i>
@@ -42,7 +42,7 @@
             <p class="stat-label">Pending</p>
         </div>
     </div>
-    
+
     <div class="stat-card">
         <div class="stat-icon" style="background-color: rgba(220, 53, 69, 0.1); color: var(--danger);">
             <i class="fas fa-times-circle"></i>

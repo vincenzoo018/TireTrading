@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.customer.app')
 
 @section('content')
 <!-- Products Header -->
@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4 mb-4">
                 <div class="card product-card">
                     <img src="/images/tire-2.jpg" class="card-img-top product-img" alt="Performance Tire">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-4 mb-4">
                 <div class="card product-card">
                     <img src="/images/tire-3.jpg" class="card-img-top product-img" alt="Winter Tire">
@@ -79,7 +79,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- More product cards would go here -->
         </div>
 

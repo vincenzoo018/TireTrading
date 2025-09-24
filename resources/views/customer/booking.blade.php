@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.customer.app')
 
 @section('content')
 <!-- Booking Header -->
@@ -42,7 +42,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="date" class="form-label">Preferred Date</label>
@@ -63,22 +63,22 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="comments" class="form-label">Additional Comments</label>
                             <textarea class="form-control" id="comments" rows="3" placeholder="Any special requests or details about your vehicle..."></textarea>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label">Upload Vehicle Photos (Optional)</label>
                             <input type="file" class="form-control" multiple>
                         </div>
-                        
+
                         <button type="submit" class="btn btn-primary btn-lg">Confirm Booking</button>
                     </form>
                 </div>
             </div>
-            
+
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
@@ -89,4 +89,72 @@
                             <span>Service:</span>
                             <span id="selectedService">Not selected</span>
                         </div>
-                        <
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Vehicle:</span>
+                            <span id="selectedVehicle">Not selected</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Date:</span>
+                            <span id="selectedDate">Not selected</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Time:</span>
+                            <span id="selectedTime">Not selected</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-2">
+                            <strong>Estimated Cost:</strong>
+                            <strong id="estimatedCost">P0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h6>Need Assistance?</h6>
+                        <p class="small mb-2"><i class="fas fa-phone me-2"></i> (082) 123-4567</p>
+                        <p class="small mb-2"><i class="fas fa-envelope me-2"></i> service@8plytire.com</p>
+                        <p class="small mb-0"><i class="fas fa-clock me-2"></i> Mon-Fri: 8AM-6PM</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section('scripts')
+<script>
+    // Update booking summary in real-time
+    document.getElementById('serviceType').addEventListener('change', updateSummary);
+    document.getElementById('vehicleType').addEventListener('change', updateSummary);
+    document.getElementById('date').addEventListener('change', updateSummary);
+    document.getElementById('time').addEventListener('change', updateSummary);
+
+    function updateSummary() {
+        const serviceSelect = document.getElementById('serviceType');
+        const vehicleSelect = document.getElementById('vehicleType');
+        const dateInput = document.getElementById('date');
+        const timeSelect = document.getElementById('time');
+
+        document.getElementById('selectedService').textContent = serviceSelect.options[serviceSelect.selectedIndex].text || 'Not selected';
+        document.getElementById('selectedVehicle').textContent = vehicleSelect.options[vehicleSelect.selectedIndex].text || 'Not selected';
+        document.getElementById('selectedDate').textContent = dateInput.value || 'Not selected';
+        document.getElementById('selectedTime').textContent = timeSelect.options[timeSelect.selectedIndex].text || 'Not selected';
+
+        // Update estimated cost based on service selection
+        const serviceCosts = {
+            'alignment': 800,
+            'tire_replacement': 200,
+            'brake_service': 1200,
+            'oil_change': 500,
+            'battery': 2500,
+            'filter': 300
+        };
+
+        const selectedService = serviceSelect.value;
+        const estimatedCost = serviceCosts[selectedService] || 0;
+        document.getElementById('estimatedCost').textContent = 'P' + estimatedCost;
+    }
+</script>
+@endsection
+@endsection

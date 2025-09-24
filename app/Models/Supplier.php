@@ -9,48 +9,30 @@ class Supplier extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'supplier_id';
+
     protected $fillable = [
-        'company_name',
-        'contact_person',
+        'supplier_name',
+        'contact_number',
+        'contact_address',
         'address',
-        'phone',
-        'email',
-        'payment_terms',
-        'status'
+        'employee_id',
+        'is_active',
     ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    // Relationships
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id', 'employee_id');
+    }
+
+    public function receivings()
+    {
+        return $this->hasMany(Receiving::class, 'supplier_id', 'supplier_id');
+    }
 }
 
-// <?php
-
-// use Illuminate\Database\Migrations\Migration;
-// use Illuminate\Database\Schema\Blueprint;
-// use Illuminate\Support\Facades\Schema;
-
-// return new class extends Migration
-// {
-//     /**
-//      * Run the migrations.
-//      */
-//     public function up(): void
-//     {
-//         Schema::create('suppliers', function (Blueprint $table) {
-//             $table->id();
-//             $table->string('company_name');
-//             $table->string('contact_person');
-//             $table->text('address');
-//             $table->string('phone');
-//             $table->string('email');
-//             $table->string('payment_terms');
-//             $table->enum('status', ['active', 'inactive'])->default('active');
-//             $table->timestamps();
-//         });
-//     }
-
-//     /**
-//      * Reverse the migrations.
-//      */
-//     public function down(): void
-//     {
-//         Schema::dropIfExists('suppliers');
-//     }
-// };
