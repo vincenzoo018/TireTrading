@@ -2,61 +2,47 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
-    use HasFactory;
-
     protected $primaryKey = 'product_id';
+    public $timestamps = false;
 
     protected $fillable = [
-        'product_name',
-        'description',
-        'price',
-        'stock_quantity',
-        'brand',
-        'model',
-        'selling_price',
         'category_id',
-        'cost_price',
-        'min_stock_level',
-        'max_stock_level',
-        'is_active',
+        'product_name',
+        'brand',
+        'size',
+        'length',
+        'width',
+        'description',
+        'base_price',
+        'selling_price',
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
+        'base_price' => 'decimal:2',
         'selling_price' => 'decimal:2',
-        'cost_price' => 'decimal:2',
-        'is_active' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
-    // Relationships
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'category_id');
     }
 
-    public function receivingDetails()
+    public function inventory(): HasOne
     {
-        return $this->hasMany(ReceivingDetail::class, 'product_id', 'product_id');
+        return $this->hasOne(Inventory::class, 'product_id', 'product_id');
     }
 
-    public function orderItems()
+    public function stockIns(): HasMany
     {
-        return $this->hasMany(OrderItem::class, 'product_id', 'product_id');
-    }
-
-    // Helper methods
-    public function isLowStock()
-    {
-        return $this->stock_quantity <= $this->min_stock_level;
-    }
-
-    public function profitMargin()
-    {
-        return $this->selling_price - $this->cost_price;
+        return $this->hasMany(StockIn::class, 'product_id', 'product_id');
     }
 }

@@ -2,37 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Supplier extends Model
 {
-    use HasFactory;
-
     protected $primaryKey = 'supplier_id';
 
     protected $fillable = [
         'supplier_name',
-        'contact_number',
-        'contact_address',
         'address',
-        'employee_id',
-        'is_active',
+        'contact_person',
+        'contact_number',
+        'email',
+        'payment_terms'
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
-
-    // Relationships
-    public function employee()
+    public function transactions(): HasMany
     {
-        return $this->belongsTo(Employee::class, 'employee_id', 'employee_id');
-    }
-
-    public function receivings()
-    {
-        return $this->hasMany(Receiving::class, 'supplier_id', 'supplier_id');
+        return $this->hasMany(Transaction::class, 'supplier_id', 'supplier_id');
     }
 }
-

@@ -2,75 +2,39 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
-    use HasFactory;
-
     protected $primaryKey = 'order_id';
 
     protected $fillable = [
-        'order_number',
-        'user_id',
-        'employee_id',
         'total_amount',
-        'tax_amount',
-        'discount_amount',
-        'final_amount',
-        'notes',
+        'tax',
+        'discount',
+        'overall_total',
+        'payment_method',
         'order_date',
-        'status',
+        'customer_id'
     ];
 
     protected $casts = [
         'total_amount' => 'decimal:2',
-        'tax_amount' => 'decimal:2',
-        'discount_amount' => 'decimal:2',
-        'final_amount' => 'decimal:2',
-        'order_date' => 'datetime',
+        'tax' => 'decimal:2',
+        'discount' => 'decimal:2',
+        'overall_total' => 'decimal:2',
+        'order_date' => 'date'
     ];
 
-    // Relationships
-    public function user()
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
+        return $this->belongsTo(Customer::class, 'customer_id', 'customer_id');
     }
 
-    public function employee()
+    public function deliveries(): HasMany
     {
-        return $this->belongsTo(Employee::class, 'employee_id', 'employee_id');
-    }
-
-    public function orderItems()
-    {
-        return $this->hasMany(OrderItem::class, 'order_id', 'order_id');
-    }
-
-    public function sales()
-    {
-        return $this->hasMany(Sale::class, 'order_id', 'order_id');
-    }
-
-    // Status scopes
-    public function scopePending($query)
-    {
-        return $query->where('status', 'pending');
-    }
-
-    public function scopeProcessing($query)
-    {
-        return $query->where('status', 'processing');
-    }
-
-    public function scopeCompleted($query)
-    {
-        return $query->where('status', 'completed');
-    }
-
-    public function scopeCancelled($query)
-    {
-        return $query->where('status', 'cancelled');
+        return $this->hasMany(Delivery::class, 'order_id', 'order_id');
     }
 }

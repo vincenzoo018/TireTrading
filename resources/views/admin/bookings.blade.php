@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="page-header">
-    <h1 class="page-title">Booking Management</h1>
+    <h1 class="page-title">Bookings Management</h1>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
@@ -11,6 +11,13 @@
     </nav>
 </div>
 
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 <!-- Stats Cards -->
 <div class="stats-container">
     <div class="stat-card">
@@ -18,7 +25,7 @@
             <i class="fas fa-calendar-check"></i>
         </div>
         <div class="stat-content">
-            <h3 class="stat-value">36</h3>
+            <h3 class="stat-value">{{ $totalBookings }}</h3>
             <p class="stat-label">Total Bookings</p>
         </div>
     </div>
@@ -28,7 +35,7 @@
             <i class="fas fa-check-circle"></i>
         </div>
         <div class="stat-content">
-            <h3 class="stat-value">24</h3>
+            <h3 class="stat-value">{{ $confirmedBookings }}</h3>
             <p class="stat-label">Confirmed</p>
         </div>
     </div>
@@ -38,7 +45,7 @@
             <i class="fas fa-clock"></i>
         </div>
         <div class="stat-content">
-            <h3 class="stat-value">8</h3>
+            <h3 class="stat-value">{{ $pendingBookings }}</h3>
             <p class="stat-label">Pending</p>
         </div>
     </div>
@@ -48,70 +55,50 @@
             <i class="fas fa-times-circle"></i>
         </div>
         <div class="stat-content">
-            <h3 class="stat-value">4</h3>
+            <h3 class="stat-value">{{ $cancelledBookings }}</h3>
             <p class="stat-label">Cancelled</p>
         </div>
     </div>
 </div>
 
-<!-- Booking Calendar -->
+<!-- Filter Section -->
 <div class="card mb-4">
     <div class="card-header">
-        <i class="fas fa-calendar me-2"></i>Booking Calendar
+        <i class="fas fa-filter me-2"></i>Filter Bookings
     </div>
     <div class="card-body">
-        <div class="text-center mb-3">
-            <h4>December 2023</h4>
-        </div>
-        <div class="calendar-container">
-            <div class="calendar-grid">
-                <div class="calendar-header">Sun</div>
-                <div class="calendar-header">Mon</div>
-                <div class="calendar-header">Tue</div>
-                <div class="calendar-header">Wed</div>
-                <div class="calendar-header">Thu</div>
-                <div class="calendar-header">Fri</div>
-                <div class="calendar-header">Sat</div>
-
-                <!-- Calendar days would go here -->
-                <div class="calendar-day">26</div>
-                <div class="calendar-day">27</div>
-                <div class="calendar-day">28</div>
-                <div class="calendar-day">29</div>
-                <div class="calendar-day">30</div>
-                <div class="calendar-day">1</div>
-                <div class="calendar-day active">2</div>
-                <div class="calendar-day">3</div>
-                <div class="calendar-day">4</div>
-                <div class="calendar-day">5</div>
-                <div class="calendar-day">6</div>
-                <div class="calendar-day">7</div>
-                <div class="calendar-day">8</div>
-                <div class="calendar-day">9</div>
-                <div class="calendar-day">10</div>
-                <div class="calendar-day">11</div>
-                <div class="calendar-day">12</div>
-                <div class="calendar-day">13</div>
-                <div class="calendar-day">14</div>
-                <div class="calendar-day">15</div>
-                <div class="calendar-day">16</div>
-                <div class="calendar-day">17</div>
-                <div class="calendar-day">18</div>
-                <div class="calendar-day">19</div>
-                <div class="calendar-day">20</div>
-                <div class="calendar-day">21</div>
-                <div class="calendar-day">22</div>
-                <div class="calendar-day">23</div>
-                <div class="calendar-day">24</div>
-                <div class="calendar-day">25</div>
-                <div class="calendar-day">26</div>
-                <div class="calendar-day">27</div>
-                <div class="calendar-day">28</div>
-                <div class="calendar-day">29</div>
-                <div class="calendar-day">30</div>
-                <div class="calendar-day">31</div>
+        <form method="GET" action="{{ route('admin.bookings') }}">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="statusFilter" class="form-label">Status</label>
+                    <select class="form-select" id="statusFilter" name="status">
+                        <option value="">All Statuses</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="dateFilter" class="form-label">Booking Date</label>
+                    <input type="date" class="form-control" id="dateFilter" name="date" value="{{ request('date') }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="serviceFilter" class="form-label">Service</label>
+                    <select class="form-select" id="serviceFilter" name="service_id">
+                        <option value="">All Services</option>
+                        @foreach($services as $service)
+                            <option value="{{ $service->services_id }}" {{ request('service_id') == $service->services_id ? 'selected' : '' }}>
+                                {{ $service->service_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -121,126 +108,220 @@
         <i class="fas fa-list me-2"></i>Booking List
     </div>
     <div class="card-body">
-        <div class="table-container">
+        <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Booking #</th>
-                        <th>Customer</th>
+                        <th>#</th>
+                        <th>Customer Name</th>
                         <th>Service</th>
-                        <th>Date & Time</th>
-                        <th>Technician</th>
+                        <th>Booking Date & Time</th>
+                        <th>Payment Method</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach($bookings as $booking)
                     <tr>
-                        <td>#BKG-001</td>
-                        <td>John Doe</td>
-                        <td>Wheel Alignment</td>
-                        <td>Dec 5, 2023 - 10:00 AM</td>
-                        <td>Pedro Reyes</td>
-                        <td><span class="badge bg-success">Confirmed</span></td>
+                        <td>{{ $loop->iteration + ($bookings->currentPage() - 1) * $bookings->perPage() }}</td>
                         <td>
-                            <button class="btn btn-sm btn-primary action-btn" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-info action-btn" title="View">
+                            @if($booking->customer)
+                                {{ $booking->customer->first_name }} {{ $booking->customer->last_name }}
+                            @else
+                                <span class="text-muted">N/A</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($booking->service)
+                                {{ $booking->service->service_name }}
+                            @else
+                                <span class="text-muted">Service not available</span>
+                            @endif
+                        </td>
+                        <td>
+                            {{ \Carbon\Carbon::parse($booking->booking_date)->format('M d, Y') }}
+                            at {{ \Carbon\Carbon::parse($booking->booking_time)->format('h:i A') }}
+                        </td>
+                        <td>
+                            @if($booking->payment_method)
+                                <span class="text-capitalize">{{ $booking->payment_method }}</span>
+                            @else
+                                <span class="text-muted">Not specified</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($booking->status === 'pending')
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            @elseif($booking->status === 'confirmed')
+                                <span class="badge bg-success">Confirmed</span>
+                            @elseif($booking->status === 'completed')
+                                <span class="badge bg-info">Completed</span>
+                            @else
+                                <span class="badge bg-danger">Cancelled</span>
+                            @endif
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary action-btn view-booking"
+                                    data-bs-toggle="tooltip" title="View Details"
+                                    data-id="{{ $booking->booking_id }}"
+                                    data-customer="{{ $booking->customer ? $booking->customer->first_name . ' ' . $booking->customer->last_name : 'N/A' }}"
+                                    data-service="{{ $booking->service ? $booking->service->service_name : 'N/A' }}"
+                                    data-date="{{ \Carbon\Carbon::parse($booking->booking_date)->format('M d, Y') }}"
+                                    data-time="{{ \Carbon\Carbon::parse($booking->booking_time)->format('h:i A') }}"
+                                    data-payment="{{ $booking->payment_method ?: 'Not specified' }}"
+                                    data-status="{{ $booking->status }}"
+                                    data-notes="{{ $booking->notes ?: 'No additional notes' }}">
                                 <i class="fas fa-eye"></i>
                             </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#BKG-002</td>
-                        <td>Jane Smith</td>
-                        <td>Tire Replacement</td>
-                        <td>Dec 6, 2023 - 2:00 PM</td>
-                        <td>Maria Santos</td>
-                        <td><span class="badge bg-warning text-dark">Pending</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary action-btn" title="Edit">
+                            <button class="btn btn-sm btn-warning action-btn edit-booking"
+                                    data-bs-toggle="tooltip" title="Edit Booking"
+                                    data-id="{{ $booking->booking_id }}"
+                                    data-status="{{ $booking->status }}">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-sm btn-info action-btn" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                            <form action="{{ route('admin.bookings.delete', $booking->booking_id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger action-btn" data-bs-toggle="tooltip" title="Delete" onclick="return confirm('Are you sure you want to delete this booking?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
-                    <tr>
-                        <td>#BKG-003</td>
-                        <td>Mike Johnson</td>
-                        <td>Brake Service</td>
-                        <td>Dec 7, 2023 - 9:00 AM</td>
-                        <td>Juan Dela Cruz</td>
-                        <td><span class="badge bg-success">Confirmed</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary action-btn" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-info action-btn" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#BKG-004</td>
-                        <td>ABC Corporation</td>
-                        <td>Fleet Maintenance</td>
-                        <td>Dec 8, 2023 - 1:00 PM</td>
-                        <td>Ana Lopez</td>
-                        <td><span class="badge bg-danger">Cancelled</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary action-btn" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-info action-btn" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
+        </div>
+
+        <!-- Pagination -->
+        @if($bookings->hasPages())
+        <div class="d-flex justify-content-center mt-4">
+            {{ $bookings->links() }}
+        </div>
+        @endif
+    </div>
+</div>
+
+<!-- View Booking Modal -->
+<div class="modal fade" id="viewBookingModal" tabindex="-1" aria-labelledby="viewBookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewBookingModalLabel">Booking Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Customer:</div>
+                    <div class="col-sm-8" id="viewCustomer"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Service:</div>
+                    <div class="col-sm-8" id="viewService"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Date & Time:</div>
+                    <div class="col-sm-8" id="viewDateTime"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Payment Method:</div>
+                    <div class="col-sm-8" id="viewPayment"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 fw-bold">Status:</div>
+                    <div class="col-sm-8" id="viewStatus"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 fw-bold">Notes:</div>
+                    <div class="col-sm-8" id="viewNotes"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
 
-<style>
-.calendar-container {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-}
+<!-- Edit Booking Status Modal -->
+<div class="modal fade" id="editBookingModal" tabindex="-1" aria-labelledby="editBookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBookingModalLabel">Update Booking Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editBookingForm" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editBookingStatus" class="form-label">Status</label>
+                        <select class="form-select" id="editBookingStatus" name="status" required>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // View Booking Modal
+        const viewBookingButtons = document.querySelectorAll('.view-booking');
+        const viewBookingModal = new bootstrap.Modal(document.getElementById('viewBookingModal'));
 
-.calendar-header {
-    text-align: center;
-    font-weight: bold;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 5px;
-}
+        viewBookingButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('viewCustomer').textContent = this.getAttribute('data-customer');
+                document.getElementById('viewService').textContent = this.getAttribute('data-service');
+                document.getElementById('viewDateTime').textContent = this.getAttribute('data-date') + ' at ' + this.getAttribute('data-time');
+                document.getElementById('viewPayment').textContent = this.getAttribute('data-payment');
 
-.calendar-day {
-    text-align: center;
-    padding: 15px;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    cursor: pointer;
-}
+                const status = this.getAttribute('data-status');
+                let statusBadge = '';
+                if(status === 'pending') {
+                    statusBadge = '<span class="badge bg-warning text-dark">Pending</span>';
+                } else if(status === 'confirmed') {
+                    statusBadge = '<span class="badge bg-success">Confirmed</span>';
+                } else if(status === 'completed') {
+                    statusBadge = '<span class="badge bg-info">Completed</span>';
+                } else {
+                    statusBadge = '<span class="badge bg-danger">Cancelled</span>';
+                }
+                document.getElementById('viewStatus').innerHTML = statusBadge;
 
-.calendar-day:hover {
-    background-color: #e9ecef;
-}
+                document.getElementById('viewNotes').textContent = this.getAttribute('data-notes');
 
-.calendar-day.active {
-    background-color: var(--primary);
-    color: white;
-}
-</style>
+                viewBookingModal.show();
+            });
+        });
+
+        // Edit Booking Status Modal
+        const editBookingButtons = document.querySelectorAll('.edit-booking');
+        const editBookingModal = new bootstrap.Modal(document.getElementById('editBookingModal'));
+        const editBookingForm = document.getElementById('editBookingForm');
+
+        editBookingButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const bookingId = this.getAttribute('data-id');
+                const currentStatus = this.getAttribute('data-status');
+
+                document.getElementById('editBookingStatus').value = currentStatus;
+                editBookingForm.action = `/admin/bookings/${bookingId}`;
+                editBookingModal.show();
+            });
+        });
+    });
+</script>
 @endsection

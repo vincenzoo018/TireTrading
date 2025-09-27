@@ -14,6 +14,12 @@
             </a>
         </li>
         <li>
+            <a href="{{ route('admin.categories') }}">
+                <i class="fas fa-box"></i>
+                <span class="menu-text">Category</span>
+            </a>
+        </li>
+        <li>
             <a href="{{ route('admin.product') }}">
                 <i class="fas fa-box"></i>
                 <span class="menu-text">Product</span>
@@ -62,9 +68,9 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('admin.stocks') }}">
+            <a href="{{ route('admin.services') }}">
                 <i class="fas fa-boxes"></i>
-                <span class="menu-text">Stocks</span>
+                <span class="menu-text">Services</span>
             </a>
         </li>
         <li>

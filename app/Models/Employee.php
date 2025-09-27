@@ -2,42 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Employee extends Model
 {
-    use HasFactory;
-
     protected $primaryKey = 'employee_id';
 
     protected $fillable = [
-        'name',
-        'position',
-        'contact_number',
+        'employee_name',
         'email',
-        'hire_date',
-        'is_active',
+        'contact_number',
+        'position',
+        'role_id'
     ];
 
-    protected $casts = [
-        'hire_date' => 'date',
-        'is_active' => 'boolean',
-    ];
-
-    // Relationships
-    public function suppliers()
+    public function role(): BelongsTo
     {
-        return $this->hasMany(Supplier::class, 'employee_id', 'employee_id');
+        return $this->belongsTo(Role::class, 'role_id', 'role_id');
     }
 
-    public function receivings()
+    public function services(): HasMany
     {
-        return $this->hasMany(Receiving::class, 'employee_id', 'employee_id');
-    }
-
-    public function orders()
-    {
-        return $this->hasMany(Order::class, 'employee_id', 'employee_id');
+        return $this->hasMany(Service::class, 'employee_id', 'employee_id');
     }
 }

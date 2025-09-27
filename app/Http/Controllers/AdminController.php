@@ -81,9 +81,9 @@ class AdminController extends Controller
     /**
      * Display the stocks management page.
      */
-    public function stocks()
+    public function services()
     {
-        return view('admin.stocks');
+        return view('admin.services');
     }
 
     /**
