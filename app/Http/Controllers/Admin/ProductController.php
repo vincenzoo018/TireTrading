@@ -17,21 +17,16 @@ class ProductController extends Controller
         // Fetch all categories
         $categories = Category::all();
 
-        // Calculate stats
-        $totalProduct = $products->count();
-        $activeProducts = $products->where('status', 'active')->count();
-        $totalCategories = $categories->count();
-        $productCategories = Category::has('products')->count();
+        // Stats aligned to categories view keys
+        $stats = [
 
-        // Pass data to the view
-        return view('admin.product', compact(
-            'products',
-            'categories',
-            'totalProduct',
-            'activeProducts',
-            'totalCategories',
-            'productCategories'
-        ));
+            'totalProducts' => Product::count(),
+            'categoriesWithProducts' => Category::has('products')->count(),
+            'emptyCategories' => Category::doesntHave('products')->count(),
+        ];
+
+        // Pass data to the view using compact (simpler approach)
+        return view('admin.product', compact('products', 'categories'))->with($stats);
     }
 
     public function store(Request $request)

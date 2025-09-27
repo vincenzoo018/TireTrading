@@ -12,6 +12,8 @@ class Transaction extends Model
 
     protected $fillable = [
         'reference_num',
+        'product_name',
+        'qty',
         'delivery_date',
         'delivery_fee',
         'delivery_received',

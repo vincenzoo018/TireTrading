@@ -15,7 +15,7 @@ class CategoryController extends Controller
 
         $stats = [
             'totalCategories' => Category::count(),
-            'totalProducts' => Product::count(),
+
             'categoriesWithProducts' => Category::has('products')->count(),
             'emptyCategories' => Category::doesntHave('products')->count(),
         ];

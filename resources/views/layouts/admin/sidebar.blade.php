@@ -38,7 +38,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('admin.suppliers') }}">
+            <a href="{{ route('admin.supplier.index') }}">
                 <i class="fas fa-truck"></i>
                 <span class="menu-text">Suppliers</span>
             </a>

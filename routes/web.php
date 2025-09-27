@@ -14,7 +14,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/product', [AdminController::class, 'product'])->name('admin.product');
     Route::get('/inventory', [AdminController::class, 'inventory'])->name('admin.inventory');
     Route::get('/customers', [AdminController::class, 'customers'])->name('admin.customers');
-    Route::get('/suppliers', [AdminController::class, 'suppliers'])->name('admin.suppliers');
+    Route::get('/supplier', [AdminController::class, 'supplier'])->name('admin.supplier');
     Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
     Route::get('/sales', [AdminController::class, 'sales'])->name('admin.sales');
     Route::get('/transactions', [AdminController::class, 'transactions'])->name('admin.transactions');
@@ -44,6 +44,8 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\SupplierController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/employee', [EmployeeController::class, 'index'])->name('employee');
@@ -51,7 +53,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/employee/{employee}/edit', [EmployeeController::class, 'edit'])->name('employee.edit');
     Route::put('/employee/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
     Route::delete('/employee/{employee}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
+
+    // Transactions Routes
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
+    Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
+    Route::put('/transactions/{id}', [TransactionController::class, 'update'])->name('transactions.update');
+    Route::delete('/transactions/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
+    Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transactions.show');
+
 });
+
+
+
+Route::get('/admin/supplier', [SupplierController::class, 'index'])->name('admin.supplier');
+Route::get('/admin/supplier', [SupplierController::class, 'index'])->name('admin.supplier.index');
+Route::post('/admin/supplier', [SupplierController::class, 'store'])->name('admin.supplier.store');
+Route::put('/admin/supplier/{supplier}', [SupplierController::class, 'update'])->name('admin.supplier.update');
+Route::delete('/admin/supplier/{supplier}', [SupplierController::class, 'destroy'])->name('admin.supplier.destroy');
 
 
 
@@ -71,8 +89,9 @@ Route::delete('/admin/bookings/{bookingId}', [BookingController::class, 'destroy
 // Admin routes group
 Route::prefix('admin')->name('admin.')->group(function () {
 
-     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
+     // Product Management
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::put('/products/{productId}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{productId}', [ProductController::class, 'destroy'])->name('products.destroy');
 
@@ -81,4 +100,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/categories/store', [CategoryController::class, 'storeCategory'])->name('categories.store');
     Route::put('/categories/{categoryId}', [CategoryController::class, 'updateCategory'])->name('categories.update');
     Route::delete('/categories/{categoryId}', [CategoryController::class, 'deleteCategory'])->name('categories.delete');
+
+
 });

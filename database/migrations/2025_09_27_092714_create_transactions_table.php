@@ -10,6 +10,8 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id('transaction_id');
             $table->string('reference_num');
+            $table->string('product_name');
+            $table->string('qty');
             $table->date('delivery_date');
             $table->decimal('delivery_fee', 8, 2);
             $table->boolean('delivery_received')->default(false);
@@ -17,9 +19,9 @@ return new class extends Migration
             $table->decimal('sub_total', 10, 2);
             $table->decimal('overall_total', 10, 2);
             $table->unsignedBigInteger('supplier_id');
-            $table->unsignedBigInteger('customer_id');
+
             $table->foreign('supplier_id')->references('supplier_id')->on('suppliers');
-            $table->foreign('customer_id')->references('customer_id')->on('customers');
+
             $table->timestamps();
         });
     }
