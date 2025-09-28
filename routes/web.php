@@ -136,6 +136,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
     Route::put('/inventory/{inventory}/update', [InventoryController::class, 'update'])->name('inventory.update');
+    Route::post('inventory/batch-store', [InventoryController::class, 'batchStore'])->name('inventory.batchStore');
 });
 
 
