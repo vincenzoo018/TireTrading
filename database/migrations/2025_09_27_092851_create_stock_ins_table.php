@@ -12,7 +12,7 @@ return new class extends Migration
             $table->unsignedBigInteger('transaction_id');
             $table->unsignedBigInteger('product_id');
             $table->integer('quantity');
-            $table->decimal('supplier_price', 10, 2);
+            // $table->decimal('supplier_price', 10, 2);
             $table->decimal('discount', 8, 2)->default(0);
             $table->decimal('tax', 8, 2)->default(0);
             $table->decimal('total', 10, 2);

@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <div class="stat-card">
+    <!-- <div class="stat-card">
         <div class="stat-icon" style="background-color: rgba(255, 193, 7, 0.1); color: var(--warning);">
             <i class="fas fa-exclamation-triangle"></i>
         </div>
@@ -55,9 +55,9 @@
             <h3 class="stat-value">{{ $products->where('stock_quantity','<',20)->count() }}</h3>
             <p class="stat-label">Low Stock (&lt;20)</p>
         </div>
-    </div>
+    </div> -->
 
-    <div class="stat-card">
+    <!-- <div class="stat-card">
         <div class="stat-icon" style="background-color: rgba(220, 53, 69, 0.1); color: var(--danger);">
             <i class="fas fa-times-circle"></i>
         </div>
@@ -65,7 +65,7 @@
             <h3 class="stat-value">{{ $products->where('stock_quantity',0)->count() }}</h3>
             <p class="stat-label">Out of Stock</p>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <!-- Add Product Form -->
@@ -116,16 +116,16 @@
             <div class="row mb-3">
                 <div class="col-md-4">
                     <label for="basePrice" class="form-label">Base Price</label>
-                    <input name="base_price" type="number" step="0.01" class="form-control" id="basePrice" required value="{{ old('base_price', '0.00') }}">
+                    <input name="supplier_price" type="number" step="0.01" class="form-control" id="basePrice" required value="{{ old('supplier_price', '0.00') }}">
                 </div>
                 <div class="col-md-4">
                     <label for="sellingPrice" class="form-label">Selling Price</label>
                     <input name="selling_price" type="number" step="0.01" class="form-control" id="sellingPrice" required value="{{ old('selling_price', '0.00') }}">
                 </div>
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                     <label for="productStock" class="form-label">Stock Quantity</label>
                     <input name="stock_quantity" type="number" class="form-control" id="productStock" required value="{{ old('stock_quantity', 0) }}">
-                </div>
+                </div> -->
             </div>
 
             <div class="row mb-3">
@@ -167,7 +167,7 @@
                         <th>Brand</th>
                         <th>Size</th>
                         <th>Price (Base / Selling)</th>
-                        <th>Stock</th>
+                        <!-- <th>Stock</th> -->
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -191,9 +191,9 @@
                                 <small class="d-block text-muted">L:{{ $product->length ?? '-' }} W:{{ $product->width ?? '-' }}</small>
                             @endif
                         </td>
-                        <td>P{{ number_format($product->base_price,2) }} / P{{ number_format($product->selling_price,2) }}</td>
-                        <td>{{ $product->stock_quantity }}</td>
-                        <td>
+                        <td>P{{ number_format($product->supplier_price,2) }} / P{{ number_format($product->selling_price,2) }}</td>
+                        <!-- <td>{{ $product->stock_quantity }}</td> -->
+                        <!-- <td>
                             @if($product->stock_quantity == 0)
                                 <span class="badge bg-danger">Out of Stock</span>
                             @elseif($product->stock_quantity < 20)
@@ -201,7 +201,7 @@
                             @else
                                 <span class="badge bg-success">{{ ucfirst($product->status) }}</span>
                             @endif
-                        </td>
+                        </td> -->
                         <td>
                             <!-- Edit Button triggers modal -->
                             <button class="btn btn-sm btn-primary action-btn" data-bs-toggle="modal" data-bs-target="#editProductModal{{ $product->product_id }}" title="Edit">
@@ -270,17 +270,17 @@
 
                                 <div class="row mb-3">
                                     <div class="col-md-4">
-                                        <label class="form-label">Base Price</label>
-                                        <input name="base_price" type="number" step="0.01" class="form-control" value="{{ old('base_price', $product->base_price) }}" required>
+                                        <label class="form-label">Supplier Price</label>
+                                        <input name="supplier_price" type="number" step="0.01" class="form-control" value="{{ old('supplier_price', $product->supplier_price) }}" required>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Selling Price</label>
                                         <input name="selling_price" type="number" step="0.01" class="form-control" value="{{ old('selling_price', $product->selling_price) }}" required>
                                     </div>
-                                    <div class="col-md-4">
+                                    <!-- <div class="col-md-4">
                                         <label class="form-label">Stock Quantity</label>
                                         <input name="stock_quantity" type="number" class="form-control" value="{{ old('stock_quantity', $product->stock_quantity) }}" required>
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 <div class="mb-3">

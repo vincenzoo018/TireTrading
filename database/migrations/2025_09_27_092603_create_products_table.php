@@ -23,13 +23,14 @@ return new class extends Migration
             $table->text('description')->nullable();
 
             // price fields
-            $table->decimal('base_price', 10, 2)->default(0.00);
+            $table->decimal('supplier_price', 10, 2)->default(0.00);
             $table->decimal('selling_price', 10, 2)->default(0.00);
 
             // added stock quantity
-            $table->integer('stock_quantity')->default(0);
+            // $table->integer('stock_quantity')->default(0);
 
             $table->enum('status', ['active', 'inactive'])->default('active');
+
 
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

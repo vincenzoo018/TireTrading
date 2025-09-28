@@ -24,7 +24,7 @@ class Product extends Model
         'description',
         'base_price',
         'selling_price',
-        'stock_quantity', // ✅ updated column name
+        
         'status'
     ];
 

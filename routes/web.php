@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\InventoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -130,4 +131,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/categories/store', [CategoryController::class, 'storeCategory'])->name('categories.store');
     Route::put('/categories/{categoryId}', [CategoryController::class, 'updateCategory'])->name('categories.update');
     Route::delete('/categories/{categoryId}', [CategoryController::class, 'deleteCategory'])->name('categories.delete');
+
+
+    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
+    Route::put('/inventory/{inventory}/update', [InventoryController::class, 'update'])->name('inventory.update');
 });
+
+
+
+
+
+
+    

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StockIn extends Model
 {
@@ -35,4 +36,9 @@ class StockIn extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
+
+        public function inventories(): HasMany
+        {
+            return $this->hasMany(Inventory::class, 'stock_in_id', 'stock_in_id');
+        }
 }

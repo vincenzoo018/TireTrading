@@ -26,7 +26,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('admin.inventory') }}">
+            <a href="{{ route('admin.inventory.index') }}">
                 <i class="fas fa-warehouse"></i>
                 <span class="menu-text">Inventory</span>
             </a>

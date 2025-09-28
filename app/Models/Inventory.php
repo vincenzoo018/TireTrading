@@ -11,9 +11,10 @@ class Inventory extends Model
     protected $primaryKey = 'inventory_id';
 
     protected $fillable = [
-        'product_id',
-        'quantity_on_hand',
-        'last_updated'
+           'product_id',
+           'stock_in_id',
+           'quantity_on_hand',
+           'last_updated'
     ];
 
     protected $casts = [
@@ -29,4 +30,9 @@ class Inventory extends Model
     {
         return $this->hasMany(Cart::class, 'inventory_id', 'inventory_id');
     }
+
+        public function stockIn(): BelongsTo
+        {
+            return $this->belongsTo(StockIn::class, 'stock_in_id', 'stock_in_id');
+        }
 }

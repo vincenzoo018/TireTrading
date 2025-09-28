@@ -36,9 +36,9 @@ class ProductController extends Controller
             'length'         => 'nullable|string|max:255',
             'width'          => 'nullable|string|max:255',
             'description'    => 'nullable|string',
-            'base_price'     => 'required|numeric|min:0',
+            'supplier_price'     => 'required|numeric|min:0',
             'selling_price'  => 'required|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
+            // 'stock_quantity' => 'required|integer|min:0',
             'status'         => 'required|in:active,inactive',
         ]);
 
@@ -60,9 +60,9 @@ class ProductController extends Controller
             'length'         => 'nullable|string|max:255',
             'width'          => 'nullable|string|max:255',
             'description'    => 'nullable|string',
-            'base_price'     => 'required|numeric|min:0',
+            'supplier_price'     => 'required|numeric|min:0',
             'selling_price'  => 'required|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
+            // 'stock_quantity' => 'required|integer|min:0',
             'status'         => 'required|in:active,inactive',
         ]);
 

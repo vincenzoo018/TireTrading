@@ -9,10 +9,10 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id('inventory_id');
-            $table->unsignedBigInteger('product_id');
+            // $table->unsignedBigInteger('product_id');
             $table->integer('quantity_on_hand');
             $table->timestamp('last_updated')->useCurrent();
-            $table->foreign('product_id')->references('product_id')->on('products');
+            // $table->foreign('product_id')->references('product_id')->on('products');
             $table->timestamps();
         });
     }
