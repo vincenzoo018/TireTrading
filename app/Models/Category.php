@@ -9,10 +9,16 @@ class Category extends Model
 {
     protected $primaryKey = 'category_id';
 
+    // ✅ Optional: enable timestamps if you have them in DB
+    public $timestamps = true;
+
     protected $fillable = [
         'category_name',
     ];
 
+    /**
+     * ✅ One category has many products
+     */
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'category_id', 'category_id');

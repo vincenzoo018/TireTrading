@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Product extends Model
 {
     protected $primaryKey = 'product_id';
-    public $timestamps = false;
+
+    // ✅ If you want Laravel to auto-handle created_at & updated_at, set this to true
+    public $timestamps = true;
 
     protected $fillable = [
         'category_id',
@@ -22,7 +24,8 @@ class Product extends Model
         'description',
         'base_price',
         'selling_price',
-        'status',
+        'stock_quantity', // ✅ updated column name
+        'status'
     ];
 
     protected $casts = [
@@ -32,16 +35,25 @@ class Product extends Model
         'updated_at' => 'datetime',
     ];
 
+    /**
+     * ✅ Belongs to a Category
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'category_id');
     }
 
+    /**
+     * ✅ Has one inventory record (if you are tracking stock separately)
+     */
     public function inventory(): HasOne
     {
         return $this->hasOne(Inventory::class, 'product_id', 'product_id');
     }
 
+    /**
+     * ✅ Has many stock-in records (for stock history)
+     */
     public function stockIns(): HasMany
     {
         return $this->hasMany(StockIn::class, 'product_id', 'product_id');

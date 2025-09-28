@@ -9,72 +9,77 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    /**
+     * Display all products and categories.
+     */
     public function index()
     {
-        // Fetch all products with their associated category
+        // ✅ Eager load category relationship
         $products = Product::with('category')->get();
 
-        // Fetch all categories
+        // ✅ Fetch all categories for the dropdown
         $categories = Category::all();
 
-        // Stats aligned to categories view keys
-        $stats = [
-
-            'totalProducts' => Product::count(),
-            'categoriesWithProducts' => Category::has('products')->count(),
-            'emptyCategories' => Category::doesntHave('products')->count(),
-        ];
-
-        // Pass data to the view using compact (simpler approach)
-        return view('admin.product', compact('products', 'categories'))->with($stats);
+        return view('admin.product', compact('products', 'categories'));
     }
 
+    /**
+     * Store a new product.
+     */
     public function store(Request $request)
     {
-        $request->validate([
-            'product_name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,category_id',
-            'brand' => 'nullable|string|max:255',
-            'size' => 'nullable|string|max:255',
-            'length' => 'nullable|numeric',
-            'width' => 'nullable|numeric',
-            'description' => 'nullable|string',
-            'base_price' => 'required|numeric|min:0',
-            'selling_price' => 'required|numeric|min:0',
-            'status' => 'nullable|in:active,inactive',
+        $validated = $request->validate([
+            'product_name'   => 'required|string|max:255',
+            'category_id'    => 'required|exists:categories,category_id',
+            'brand'          => 'required|string|max:255',
+            'size'           => 'required|string|max:255',
+            'length'         => 'nullable|string|max:255',
+            'width'          => 'nullable|string|max:255',
+            'description'    => 'nullable|string',
+            'base_price'     => 'required|numeric|min:0',
+            'selling_price'  => 'required|numeric|min:0',
+            'stock_quantity' => 'required|integer|min:0',
+            'status'         => 'required|in:active,inactive',
         ]);
 
-        Product::create($request->all());
+        Product::create($validated);
 
-        return redirect()->route('admin.products.index')->with('success', 'Product added successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product added successfully!');
     }
 
+    /**
+     * Update product details.
+     */
     public function update(Request $request, $productId)
     {
-        $request->validate([
-            'product_name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,category_id',
-            'brand' => 'nullable|string|max:255',
-            'size' => 'nullable|string|max:255',
-            'length' => 'nullable|numeric',
-            'width' => 'nullable|numeric',
-            'description' => 'nullable|string',
-            'base_price' => 'required|numeric|min:0',
-            'selling_price' => 'required|numeric|min:0',
-            'status' => 'nullable|in:active,inactive',
+        $validated = $request->validate([
+            'product_name'   => 'required|string|max:255',
+            'category_id'    => 'required|exists:categories,category_id',
+            'brand'          => 'required|string|max:255',
+            'size'           => 'required|string|max:255',
+            'length'         => 'nullable|string|max:255',
+            'width'          => 'nullable|string|max:255',
+            'description'    => 'nullable|string',
+            'base_price'     => 'required|numeric|min:0',
+            'selling_price'  => 'required|numeric|min:0',
+            'stock_quantity' => 'required|integer|min:0',
+            'status'         => 'required|in:active,inactive',
         ]);
 
         $product = Product::findOrFail($productId);
-        $product->update($request->all());
+        $product->update($validated);
 
-        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
     }
 
+    /**
+     * Delete a product.
+     */
     public function destroy($productId)
     {
         $product = Product::findOrFail($productId);
         $product->delete();
 
-        return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully!');
     }
 }
