@@ -18,8 +18,8 @@
                     <div class="profile-picture mb-3">
                         <img src="/images/user-avatar.jpg" alt="Profile Picture" class="rounded-circle" width="120" height="120">
                     </div>
-                    <h4>John Doe</h4>
-                    <p class="text-muted">Customer since 2022</p>
+                    <h4>{{ Auth::user()->getFullNameAttribute() }}</h4>
+                    <p class="text-muted">Customer since {{ Auth::user()->created_at->format('Y') }}</p>
                     <div class="d-grid gap-2">
                         <a href="{{ route('customer.orders') }}" class="btn btn-outline-primary">
                             <i class="fas fa-shopping-bag me-2"></i>My Orders
@@ -55,49 +55,34 @@
                 <div class="profile-card">
                     <h4 class="mb-4">Personal Information</h4>
                     <form>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="firstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="firstName" value="John" required>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" value="{{ Auth::user()->fname }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" value="{{ Auth::user()->lname }}" required>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label for="lastName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" value="Doe" required>
-                            </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" value="john.doe@email.com" required>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="email" value="{{ Auth::user()->email }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phone" value="{{ Auth::user()->phone }}" required>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label for="phone" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="phone" value="0912-345-6789" required>
-                            </div>
-                        </div>
 
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Address</label>
-                            <textarea class="form-control" id="address" rows="3" required>123 Main Street, Davao City</textarea>
-                        </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <textarea class="form-control" id="address" rows="3" required>{{ Auth::user()->address }}</textarea>
+                            </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="city" class="form-label">City</label>
-                                <input type="text" class="form-control" id="city" value="Davao City" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="province" class="form-label">Province</label>
-                                <input type="text" class="form-control" id="province" value="Davao del Sur" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="zipCode" class="form-label">ZIP Code</label>
-                                <input type="text" class="form-control" id="zipCode" value="8000" required>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
                     </form>
                 </div>
 

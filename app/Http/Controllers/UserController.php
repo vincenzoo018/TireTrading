@@ -84,6 +84,7 @@ class UserController extends Controller
     public function logout()
     {
         // Logout logic would go here
-        return redirect('/');
+        \Auth::logout();
+        return redirect()->route('login');
     }
 }
