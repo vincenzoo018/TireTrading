@@ -22,14 +22,14 @@ class Product extends Model
         'length',
         'width',
         'description',
-        'base_price',
+        // 'base_price',
         'selling_price',
         
         'status'
     ];
 
     protected $casts = [
-        'base_price' => 'decimal:2',
+        // 'base_price' => 'decimal:2',
         'selling_price' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

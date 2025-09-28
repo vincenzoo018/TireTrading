@@ -1,14 +1,14 @@
 <?php
 
-// app/Models/User.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable; // ✅ Must extend this
+use Illuminate\Notifications\Notifiable;
 
-class User extends Model
+class User extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $primaryKey = 'user_id';
 
@@ -16,14 +16,22 @@ class User extends Model
         'fname',
         'mname',
         'lname',
+        'username',
+        'password',
         'email',
         'phone',
         'address',
         'is_active',
+        'role_id'
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
     // Relationships

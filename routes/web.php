@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,8 +30,6 @@ Route::get('/', function () {
 */
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
-    // ✅ FIXED: Use ProductController@index instead of AdminController@product
     Route::get('/product', [ProductController::class, 'index'])->name('admin.product');
 
     Route::get('/inventory', [AdminController::class, 'inventory'])->name('admin.inventory');
@@ -132,16 +131,37 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/categories/{categoryId}', [CategoryController::class, 'updateCategory'])->name('categories.update');
     Route::delete('/categories/{categoryId}', [CategoryController::class, 'deleteCategory'])->name('categories.delete');
 
-
+    // ✅ Inventory
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
     Route::put('/inventory/{inventory}/update', [InventoryController::class, 'update'])->name('inventory.update');
     Route::post('inventory/batch-store', [InventoryController::class, 'batchStore'])->name('inventory.batchStore');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes (REGISTER + LOGIN)
+|--------------------------------------------------------------------------
+*/
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+/*
+|--------------------------------------------------------------------------
+| Role-based Redirect After Login
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
 
-
-    
+    Route::get('/customer/home', function () {
+        return view('customer.home');
+    })->name('customer.home');
+});
