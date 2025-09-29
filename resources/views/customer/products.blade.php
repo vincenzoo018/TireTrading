@@ -12,91 +12,87 @@
 <!-- Products Section -->
 <section class="py-5">
     <div class="container">
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search products...">
-                    <button class="btn btn-primary" type="button">Search</button>
-                </div>
+        <form method="GET" action="{{ route('customer.products') }}" class="row mb-4 g-2">
+            <div class="col-md-3">
+                <input type="text" name="search" class="form-control" placeholder="Search products..." value="{{ request('search') }}">
             </div>
-            <div class="col-md-6">
-                <select class="form-select">
-                    <option selected>Sort by: Featured</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                    <option>Name: A to Z</option>
-                    <option>Name: Z to A</option>
+            <div class="col-md-3">
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->category_id }}" {{ request('category') == $cat->category_id ? 'selected' : '' }}>{{ $cat->category_name }}</option>
+                    @endforeach
                 </select>
             </div>
-        </div>
+            <div class="col-md-3">
+                <select name="brand" class="form-select">
+                    <option value="">All Brands</option>
+                    @foreach($brands as $brand)
+                        <option value="{{ $brand }}" {{ request('brand') == $brand ? 'selected' : '' }}>{{ $brand }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="sort" class="form-select">
+                    <option value="">Sort by: Featured</option>
+                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
+                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
+                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name: A to Z</option>
+                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name: Z to A</option>
+                </select>
+            </div>
+            <div class="col-md-12 mt-2">
+                <button class="btn btn-primary" type="submit">Filter</button>
+            </div>
+        </form>
 
         <div class="row">
-            <!-- Product listings would go here -->
-            <div class="col-md-4 mb-4">
-                <div class="card product-card">
-                    <img src="/images/tire-1.jpg" class="card-img-top product-img" alt="All-Terrain Tire">
-                    <div class="card-body">
-                        <h5 class="product-title">All-Terrain Tire</h5>
-                        <p class="card-text">Perfect for both on-road and off-road adventures.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="product-price">P2,500</span>
-                            <button class="btn btn-primary" onclick="addToCart(1, 'All-Terrain Tire', 2500)">
-                                <i class="fas fa-cart-plus"></i> Add to Cart
-                            </button>
+            @forelse($inventories as $inventory)
+                @php
+                    $product = $inventory->stockIn->product ?? null;
+                    $stock = $inventory->quantity_on_hand ?? 0;
+                    $status = $stock == 0 ? 'Out of Stock' : ($stock < 15 ? 'Low Stock' : 'In Stock');
+                @endphp
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card h-100">
+                        <img src="/images/tire-{{ $product?->product_id ?? 1 }}.jpg" class="card-img-top product-img" alt="{{ $product?->product_name }}">
+                        <div class="card-body">
+                            <h5 class="product-title">{{ $product?->product_name }}</h5>
+                            <p class="card-text">{{ $product?->description }}</p>
+                            <ul class="list-unstyled mb-2">
+                                <li><strong>Brand:</strong> {{ $product?->brand }}</li>
+                                <li><strong>Size:</strong> {{ $product?->size }}</li>
+                                <li><strong>Length:</strong> {{ $product?->length }}</li>
+                                <li><strong>Width:</strong> {{ $product?->width }}</li>
+                                <li><strong>Category:</strong> {{ $product?->category?->category_name ?? '-' }}</li>
+                            </ul>
+                            <div class="mb-2">
+                                <span class="product-price">P{{ number_format($product?->selling_price ?? 0, 2) }}</span>
+                            </div>
+                            <div class="mb-2">
+                                @if($status == 'Out of Stock')
+                                    <span class="badge bg-danger">Out of Stock</span>
+                                @elseif($status == 'Low Stock')
+                                    <span class="badge bg-warning text-dark">Low Stock</span>
+                                @else
+                                    <span class="badge bg-success">In Stock</span>
+                                @endif
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button class="btn btn-primary" @if($stock == 0) disabled @endif>
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card product-card">
-                    <img src="/images/tire-2.jpg" class="card-img-top product-img" alt="Performance Tire">
-                    <div class="card-body">
-                        <h5 class="product-title">Performance Tire</h5>
-                        <p class="card-text">Enhanced handling and superior traction for sports cars.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="product-price">P3,200</span>
-                            <button class="btn btn-primary" onclick="addToCart(2, 'Performance Tire', 3200)">
-                                <i class="fas fa-cart-plus"></i> Add to Cart
-                            </button>
-                        </div>
-                    </div>
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-info">No products found.</div>
                 </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card product-card">
-                    <img src="/images/tire-3.jpg" class="card-img-top product-img" alt="Winter Tire">
-                    <div class="card-body">
-                        <h5 class="product-title">Winter Tire</h5>
-                        <p class="card-text">Specialized tread design for superior snow and ice traction.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="product-price">P3,800</span>
-                            <button class="btn btn-primary" onclick="addToCart(3, 'Winter Tire', 3800)">
-                                <i class="fas fa-cart-plus"></i> Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- More product cards would go here -->
+            @endforelse
         </div>
-
-        <!-- Pagination -->
-        <nav aria-label="Product pagination" class="mt-5">
-            <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <!-- Pagination (optional, if you add pagination) -->
     </div>
 </section>
 @endsection

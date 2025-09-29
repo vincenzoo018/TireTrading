@@ -123,13 +123,7 @@
                         <td>
                             <span class="badge bg-primary">{{ $category->products_count }} products</span>
                         </td>
-                            <td>
-                                @if($category->created_at)
-                                    {{ $category->created_at->format('M d, Y') }}
-                                @else
-                                    <span class="text-muted">N/A</span>
-                                @endif
-                            </td>
+                        <td>{{ $category->created_at->format('M d, Y') }}</td>
                         <td>
                             @if($category->products_count > 0)
                                 <span class="badge bg-success">Active</span>

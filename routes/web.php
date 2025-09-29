@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,7 +47,7 @@ Route::prefix('admin')->group(function () {
 */
 Route::prefix('customer')->group(function () {
     Route::get('/', [UserController::class, 'home'])->name('customer.home');
-    Route::get('/products', [UserController::class, 'products'])->name('customer.products');
+    Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.products');
     Route::get('/services', [UserController::class, 'services'])->name('customer.services');
     Route::get('/booking', [UserController::class, 'booking'])->name('customer.booking');
     Route::get('/cart', [UserController::class, 'cart'])->name('customer.cart');
