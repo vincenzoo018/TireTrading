@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerProductController;
+use App\Http\Controllers\CustomerServiceController;
+use App\Http\Controllers\CustomerBookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,8 +50,9 @@ Route::prefix('admin')->group(function () {
 Route::prefix('customer')->group(function () {
     Route::get('/', [UserController::class, 'home'])->name('customer.home');
     Route::get('/products', [CustomerProductController::class, 'index'])->name('customer.products');
-    Route::get('/services', [UserController::class, 'services'])->name('customer.services');
+    Route::get('/services', [CustomerServiceController::class, 'index'])->name('customer.services');
     Route::get('/booking', [UserController::class, 'booking'])->name('customer.booking');
+    Route::post('/booking', [CustomerBookingController::class, 'store'])->name('customer.booking.store');
     Route::get('/cart', [UserController::class, 'cart'])->name('customer.cart');
     Route::get('/profile', [UserController::class, 'profile'])->name('customer.profile');
     Route::get('/checkout', [UserController::class, 'checkout'])->name('customer.checkout');

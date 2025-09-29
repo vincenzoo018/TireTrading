@@ -12,91 +12,122 @@
 <!-- Services Section -->
 <section class="py-5">
     <div class="container">
+        <form method="GET" action="{{ route('customer.services') }}" class="row mb-4 g-2">
+            <div class="col-md-4">
+                <input type="text" name="search" class="form-control" placeholder="Search services..." value="{{ request('search') }}">
+            </div>
+            <div class="col-md-4">
+                <select name="sort" class="form-select">
+                    <option value="">Sort by: Featured</option>
+                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
+                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
+                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name: A to Z</option>
+                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name: Z to A</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary w-100" type="submit">Filter</button>
+            </div>
+        </form>
+
         <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card service-card text-center">
-                    <div class="card-body">
-                        <div class="service-icon">
-                            <i class="fas fa-cogs"></i>
+            @forelse($services as $service)
+                @php
+                    $isBooked = in_array($service->services_id, $bookedServiceIds ?? []);
+                @endphp
+                <div class="col-md-4 mb-4">
+                    <div class="card service-card text-center h-100">
+                        <div class="card-body">
+                            <div class="service-icon mb-2">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <h5 class="card-title">{{ $service->service_name }}</h5>
+                            <p class="card-text">{{ $service->description }}</p>
+                            <p class="price">P{{ number_format($service->service_price, 2) }}</p>
+                            <div class="mb-2">
+                                @if($isBooked)
+                                    <span class="badge bg-secondary">Not Available</span>
+                                @else
+                                    <span class="badge bg-success">Available</span>
+                                @endif
+                            </div>
+                            <a href="{{ route('customer.booking', ['service_id' => $service->services_id]) }}" class="btn btn-primary @if($isBooked) disabled @endif" @if($isBooked) tabindex="-1" aria-disabled="true" @endif>
+                                Book Now
+                            </a>
                         </div>
-                        <h5 class="card-title">Wheel Alignment</h5>
-                        <p class="card-text">Precision alignment for better handling and extended tire life.</p>
-                        <p class="price">Starting at P800</p>
-                        <a href="{{ route('customer.booking') }}" class="btn btn-primary">Book Now</a>
                     </div>
                 </div>
-            </div>
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-info">No services found.</div>
+                </div>
+            @endforelse
+        </div>
 
-            <div class="col-md-4 mb-4">
-                <div class="card service-card text-center">
-                    <div class="card-body">
-                        <div class="service-icon">
-                            <i class="fas fa-tools"></i>
+        <!-- Booking Modal -->
+        <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form id="bookingForm" method="POST" action="{{ route('customer.booking.store') }}">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="bookingModalLabel">Book Service</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <h5 class="card-title">Tire Replacement</h5>
-                        <p class="card-text">Professional tire mounting and balancing services.</p>
-                        <p class="price">Starting at P200</p>
-                        <a href="{{ route('customer.booking') }}" class="btn btn-primary">Book Now</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card service-card text-center">
-                    <div class="card-body">
-                        <div class="service-icon">
-                            <i class="fas fa-car"></i>
+                        <div class="modal-body">
+                            <input type="hidden" name="service_id" id="modalServiceId">
+                            <div class="mb-3">
+                                <label for="modalServiceName" class="form-label">Service</label>
+                                <input type="text" class="form-control" id="modalServiceName" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="modalServicePrice" class="form-label">Price</label>
+                                <input type="text" class="form-control" id="modalServicePrice" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="modalServiceDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="modalServiceDescription" rows="2" readonly></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="customerName" class="form-label">Your Name</label>
+                                <input type="text" class="form-control" id="customerName" name="customer_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="customerContact" class="form-label">Contact Number</label>
+                                <input type="text" class="form-control" id="customerContact" name="customer_contact" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="bookingDate" class="form-label">Preferred Date</label>
+                                <input type="date" class="form-control" id="bookingDate" name="booking_date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="vehicleInfo" class="form-label">Vehicle Info</label>
+                                <input type="text" class="form-control" id="vehicleInfo" name="vehicle_info" required>
+                            </div>
                         </div>
-                        <h5 class="card-title">Brake Service</h5>
-                        <p class="card-text">Complete brake inspection and repair services.</p>
-                        <p class="price">Starting at P1,200</p>
-                        <a href="{{ route('customer.booking') }}" class="btn btn-primary">Book Now</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card service-card text-center">
-                    <div class="card-body">
-                        <div class="service-icon">
-                            <i class="fas fa-oil-can"></i>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Submit Booking</button>
                         </div>
-                        <h5 class="card-title">Oil Change</h5>
-                        <p class="card-text">Quick and efficient oil change with quality lubricants.</p>
-                        <p class="price">Starting at P500</p>
-                        <a href="{{ route('customer.booking') }}" class="btn btn-primary">Book Now</a>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card service-card text-center">
-                    <div class="card-body">
-                        <div class="service-icon">
-                            <i class="fas fa-battery-full"></i>
-                        </div>
-                        <h5 class="card-title">Battery Replacement</h5>
-                        <p class="card-text">Professional battery testing and replacement services.</p>
-                        <p class="price">Starting at P2,500</p>
-                        <a href="{{ route('customer.booking') }}" class="btn btn-primary">Book Now</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-4">
-                <div class="card service-card text-center">
-                    <div class="card-body">
-                        <div class="service-icon">
-                            <i class="fas fa-filter"></i>
-                        </div>
-                        <h5 class="card-title">Filter Replacement</h5>
-                        <p class="card-text">Air, oil, and cabin filter replacement services.</p>
-                        <p class="price">Starting at P300</p>
-                        <a href="{{ route('customer.booking') }}" class="btn btn-primary">Book Now</a>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.book-btn').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    document.getElementById('modalServiceId').value = this.getAttribute('data-id');
+                    document.getElementById('modalServiceName').value = this.getAttribute('data-name');
+                    document.getElementById('modalServicePrice').value = 'P' + parseFloat(this.getAttribute('data-price')).toFixed(2);
+                    document.getElementById('modalServiceDescription').value = this.getAttribute('data-description');
+                    var modal = new bootstrap.Modal(document.getElementById('bookingModal'));
+                    modal.show();
+                });
+            });
+        });
+        </script>
     </div>
 </section>
 
